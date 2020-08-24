@@ -1,17 +1,20 @@
 package com.codeWithDivya;
 
+import com.codeWithDivya.dao.Fireball;
+import com.codeWithDivya.dao.Location;
+import com.codeWithDivya.service.FireballService;
+import com.codeWithDivya.service.impl.FireballServiceImpl;
+import com.codeWithDivya.utils.Direction;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         // write your code here
-
+        var fireballService=new FireballServiceImpl();
+        fireballService.getDataPoints("2017-01-01");
         Location boston = new Location("Boston", 42.354558, 71.054254, Direction.N, Direction.W);
         Location ncr = new Location("NCR", 28.574389, 77.312638, Direction.N, Direction.E);
         Location sanFran = new Location("San Francisco", 37.793700, 122.403906, Direction.N, Direction.W);
@@ -25,7 +28,7 @@ public class Main {
 
 
         for(Location location:locationInputs){
-//+- of location inputs
+            //+- of location inputs
             fireball(location.getLatitude(),location.getLongitude());
         }
 
@@ -40,13 +43,7 @@ public class Main {
      * @return
      */
     public static double fireball(double latitude, double longitude) throws IOException {
-        URLConnection urlConnection = new URL("https://ssd-api.jpl.nasa.gov/fireball.api?date-min=2017-01-01&").openConnection();
-        String readLine = null;
-      /*  urlConnection.setRequestProperty("header1", header1);
-        urlConnection.setRequestProperty("header2", header2);*/
-        //Get Response
-        InputStream is = urlConnection.getInputStream();
-        System.out.println(urlConnection.getContentType());
+
         double brightestStarEnergy=0.00;
         return brightestStarEnergy;
 

@@ -1,4 +1,6 @@
-package com.codeWithDivya;
+package com.codeWithDivya.dao;
+
+import com.codeWithDivya.utils.Direction;
 
 import java.util.Objects;
 

@@ -20,7 +20,7 @@ public class Main {
 
 
         for(Location location:locationInputs){
-
+//+- of location inputs
             fireball(location.getLatitude(),location.getLongitude());
         }
 

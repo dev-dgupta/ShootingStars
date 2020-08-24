@@ -1,7 +1,5 @@
 package com.codeWithDivya.dao;
 
-import com.codeWithDivya.utils.Direction;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -16,11 +14,11 @@ public class Fireball {
     //latitude at peak brightness (degrees)
     private double latitude;
     //latitude direction (“N” or “S”)
-    private Direction latitutdeDirection;
+    private String latDir;
     //longitude at peak brightness (degrees)
     private double longitude;
     //longitude direction (“E” or “W”)
-    private Direction longitudeDirection;
+    private String longDir;
     //altitude above the geoid at peak brightness (km)
     private double altitude;
     //velocity at peak brightness (km/s)
@@ -35,12 +33,12 @@ public class Fireball {
     public Fireball() {
     }
 
-    public Fireball(double totalImpactEnergy, double latitude, Direction latitutdeDirection, double longitude, Direction longitudeDirection) {
-        this.totalImpactEnergy = totalImpactEnergy;
+    public Fireball(double latitude, double longitude,
+                    String latDir, String longDir) {
         this.latitude = latitude;
-        this.latitutdeDirection = latitutdeDirection;
         this.longitude = longitude;
-        this.longitudeDirection = longitudeDirection;
+        this.latDir = latDir;
+        this.longDir = longDir;
     }
 
     public Date getDate() {
@@ -75,12 +73,12 @@ public class Fireball {
         this.latitude = latitude;
     }
 
-    public Direction getLatitutdeDirection() {
-        return latitutdeDirection;
+    public String getLatDir() {
+        return latDir;
     }
 
-    public void setLatitutdeDirection(Direction latitutdeDirection) {
-        this.latitutdeDirection = latitutdeDirection;
+    public void setLatDir(String latDir) {
+        this.latDir = latDir;
     }
 
     public double getLongitude() {
@@ -91,12 +89,12 @@ public class Fireball {
         this.longitude = longitude;
     }
 
-    public Direction getLongitudeDirection() {
-        return longitudeDirection;
+    public String getLongDir() {
+        return longDir;
     }
 
-    public void setLongitudeDirection(Direction longitudeDirection) {
-        this.longitudeDirection = longitudeDirection;
+    public void setLongDir(String longDir) {
+        this.longDir = longDir;
     }
 
     public double getAltitude() {
@@ -154,12 +152,13 @@ public class Fireball {
                 Double.compare(fireball.getVy(), getVy()) == 0 &&
                 Double.compare(fireball.getVz(), getVz()) == 0 &&
                 Objects.equals(getDate(), fireball.getDate()) &&
-                getLatitutdeDirection() == fireball.getLatitutdeDirection() &&
-                getLongitudeDirection() == fireball.getLongitudeDirection();
+                getLatDir() == fireball.getLatDir() &&
+                getLongDir() == fireball.getLongDir();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDate(), getEnergy(), getTotalImpactEnergy(), getLatitude(), getLatitutdeDirection(), getLongitude(), getLongitudeDirection(), getAltitude(), getVelocity(), getVx(), getVy(), getVz());
+        return Objects.hash(getDate(), getEnergy(), getTotalImpactEnergy(), getLatitude(),
+                getLatDir(), getLongitude(), getLongDir(), getAltitude(), getVelocity(), getVx(), getVy(), getVz());
     }
 }

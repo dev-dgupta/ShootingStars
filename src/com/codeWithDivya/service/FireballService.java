@@ -1,12 +1,10 @@
 package com.codeWithDivya.service;
 
-import com.codeWithDivya.dao.Fireball;
-
-import java.net.MalformedURLException;
+import com.codeWithDivya.dao.Location;
 import java.util.List;
 
 public interface FireballService {
 
-    public List<Fireball> getDataPoints(String minDate) throws MalformedURLException;
+    String getBrightestShootingStar(List<Location> locations, String minDate);
 
 }

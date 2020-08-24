@@ -1,7 +1,4 @@
 package com.codeWithDivya.dao;
-
-import com.codeWithDivya.utils.Direction;
-
 import java.util.Objects;
 
 public class Location {
@@ -9,11 +6,11 @@ public class Location {
     private String name;
     private double latitude;
     private double longitude;
-    private double shootingStarBrightness;
-    private Direction latDirection;
-    private Direction longDirection;
+    //todo: must be enum
+    private String latDirection;
+    private String longDirection;
 
-    public Location(String name, double latitude, double longitude, Direction latDirection, Direction longDirection) {
+    public Location(String name, double latitude, double longitude, String latDirection, String longDirection) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -48,28 +45,20 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public Direction getLatDirection() {
+    public String getLatDirection() {
         return latDirection;
     }
 
-    public void setLatDirection(Direction latDirection) {
+    public void setLatDirection(String latDirection) {
         this.latDirection = latDirection;
     }
 
-    public Direction getLongDirection() {
+    public String getLongDirection() {
         return longDirection;
     }
 
-    public void setLongDirection(Direction longDirection) {
+    public void setLongDirection(String longDirection) {
         this.longDirection = longDirection;
-    }
-
-    public double getShootingStarBrightness() {
-        return shootingStarBrightness;
-    }
-
-    public void setShootingStarBrightness(double shootingStarBrightness) {
-        this.shootingStarBrightness = shootingStarBrightness;
     }
 
     @Override
@@ -79,7 +68,6 @@ public class Location {
         Location location = (Location) o;
         return Double.compare(location.getLatitude(), getLatitude()) == 0 &&
                 Double.compare(location.getLongitude(), getLongitude()) == 0 &&
-                Double.compare(location.getShootingStarBrightness(), getShootingStarBrightness()) == 0 &&
                 Objects.equals(getName(), location.getName()) &&
                 getLatDirection() == location.getLatDirection() &&
                 getLongDirection() == location.getLongDirection();
@@ -87,7 +75,8 @@ public class Location {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getLatitude(), getLongitude(), getShootingStarBrightness(), getLatDirection(), getLongDirection());
+        return Objects.hash(getName(), getLatitude(), getLongitude(),
+                getLatDirection(), getLongDirection());
     }
 
     @Override
@@ -96,7 +85,6 @@ public class Location {
                 "name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", shootingStarBrightness=" + shootingStarBrightness +
                 ", latDirection=" + latDirection +
                 ", longDirection=" + longDirection +
                 '}';

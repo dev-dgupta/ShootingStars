@@ -9,6 +9,7 @@ public class Location {
     private String name;
     private double latitude;
     private double longitude;
+    private double shootingStarBrightness;
     private Direction latDirection;
     private Direction longDirection;
 
@@ -18,6 +19,9 @@ public class Location {
         this.longitude = longitude;
         this.latDirection = latDirection;
         this.longDirection = longDirection;
+    }
+
+    public Location() {
     }
 
     public String getName() {
@@ -60,6 +64,14 @@ public class Location {
         this.longDirection = longDirection;
     }
 
+    public double getShootingStarBrightness() {
+        return shootingStarBrightness;
+    }
+
+    public void setShootingStarBrightness(double shootingStarBrightness) {
+        this.shootingStarBrightness = shootingStarBrightness;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,13 +79,26 @@ public class Location {
         Location location = (Location) o;
         return Double.compare(location.getLatitude(), getLatitude()) == 0 &&
                 Double.compare(location.getLongitude(), getLongitude()) == 0 &&
-                getName().equals(location.getName()) &&
+                Double.compare(location.getShootingStarBrightness(), getShootingStarBrightness()) == 0 &&
+                Objects.equals(getName(), location.getName()) &&
                 getLatDirection() == location.getLatDirection() &&
                 getLongDirection() == location.getLongDirection();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getLatitude(), getLongitude(), getLatDirection(), getLongDirection());
+        return Objects.hash(getName(), getLatitude(), getLongitude(), getShootingStarBrightness(), getLatDirection(), getLongDirection());
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "name='" + name + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", shootingStarBrightness=" + shootingStarBrightness +
+                ", latDirection=" + latDirection +
+                ", longDirection=" + longDirection +
+                '}';
     }
 }

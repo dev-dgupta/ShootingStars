@@ -1,20 +1,19 @@
 package com.codeWithDivya.exceptions;
 
+import com.codeWithDivya.utils.Constants.ErrorCodes;
+
 public class FireBallException extends Exception {
 
-    /**Fireball exception handling
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    private String errorCode="Unknown_Exception";
+    private ErrorCodes errorCode;
 
-    public FireBallException(String message,String errorCode) {
+    public FireBallException(String message, ErrorCodes errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public String getErrorCode() {
+    public ErrorCodes getErrorCode() {
         return errorCode;
     }
 }

@@ -14,12 +14,4 @@ public class Util {
         }
         return false;
     }
-
-    public static boolean isInclusive(int x, int min, int max) {
-        return x > min && x < max;
-    }
-
-    public static boolean isInclusive(float x, float min, float max) {
-        return x > min && x < max;
-    }
 }

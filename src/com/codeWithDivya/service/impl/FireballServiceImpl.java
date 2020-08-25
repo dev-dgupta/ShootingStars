@@ -10,22 +10,24 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.codeWithDivya.utils.Constants;
-import com.codeWithDivya.utils.Direction;
 import com.codeWithDivya.utils.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import static com.codeWithDivya.utils.Constants.*;
+import static com.codeWithDivya.utils.Constants.Fields.*;
+import static com.codeWithDivya.utils.Constants.ErrorCodes.*;
+
 public class FireballServiceImpl implements FireballService {
 
     @Override
-    public String getBrightestShootingStar(List<Location> locationInputs, String minDate) throws FireBallException {
+    public String getBrightestShootingStar(List<Location> locationInputs, String minDate)
+            throws FireBallException {
 
         List<Fireball> fireballDataPoints = getDataFromAPICall(minDate);
 
@@ -33,7 +35,8 @@ public class FireballServiceImpl implements FireballService {
             return "Sufficient Data Points are not available. Please check in some time!!";
         }
 
-        return "Brightest Star among Delphix Locations is " + getBrightestStarLoc(locationInputs, fireballDataPoints);
+        return "Brightest Star among Delphix Locations is " +
+                getBrightestStarLoc(locationInputs, fireballDataPoints);
     }
 
     private String getBrightestStarLoc(List<Location> locationInputs, List<Fireball> fireballDataPoints) {
@@ -41,10 +44,10 @@ public class FireballServiceImpl implements FireballService {
         String brightestStar = "";
         double latMin, latMax, longMin, longMax;
         for (Location locationInput : locationInputs) {
-            latMin = locationInput.getLatitude() - Constants.LAT_LONG_BUFFER;
-            latMax = locationInput.getLatitude() + Constants.LAT_LONG_BUFFER;
-            longMin = locationInput.getLongitude() - Constants.LAT_LONG_BUFFER;
-            longMax = locationInput.getLongitude() + Constants.LAT_LONG_BUFFER;
+            latMin = locationInput.getLatitude() - LAT_LONG_BUFFER;
+            latMax = locationInput.getLatitude() + LAT_LONG_BUFFER;
+            longMin = locationInput.getLongitude() - LAT_LONG_BUFFER;
+            longMax = locationInput.getLongitude() + LAT_LONG_BUFFER;
             for (Fireball fireball : fireballDataPoints) {
                 if (fireball.getLatDir().equalsIgnoreCase(locationInput.getLatDirection())
                         && fireball.getLongDir().equalsIgnoreCase(locationInput.getLongDirection())) {
@@ -61,18 +64,15 @@ public class FireballServiceImpl implements FireballService {
         return brightestStar;
     }
 
-//    public static double fireball(double latitude, double longitude) {
-//
-//
-//    }
-
-    private List<Fireball> getDataFromAPICall(String minDate)throws FireBallException {
+    private List<Fireball> getDataFromAPICall(String minDate) throws FireBallException {
         try {
-            StringBuilder url = new StringBuilder(Constants.API_URL.concat("?date-min=").concat(minDate).concat("&req-loc=true"));
+            StringBuilder url = new StringBuilder(API_URL.concat("?date-min=").
+                    concat(minDate).concat("&req-loc=true"));
             var request = HttpRequest.newBuilder()
                     .uri(URI.create(url.toString()))
                     .build();
-            return handleResponse(HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()));
+            return handleResponse(HttpClient.newHttpClient().send(request,
+                    HttpResponse.BodyHandlers.ofString()));
         } catch (Exception e) {
             return Collections.emptyList();
         } finally {
@@ -81,16 +81,25 @@ public class FireballServiceImpl implements FireballService {
     }
 
     private List<Fireball> handleResponse(HttpResponse response) throws FireBallException, ParseException {
-        int code = response.statusCode();
+        ErrorCodes codes = valueOf(response.statusCode());
 
-        // todo: handle these exceptions accordingly
-        switch (code) {
-            case 200:
+        switch (codes) {
+            case OK:
                 return handleBody(String.valueOf(response.body()));
-            case 400:throw new FireBallException("Bad Request","400");
-            case 405:throw new FireBallException("Method Not Allowed","405");
-            case 500:throw new FireBallException("Internal Server Error server error","500");
-            case 503:throw new FireBallException("Service Unavailable","503");
+            case BAD_REQUEST:
+                throw new FireBallException("The request contained invalid keywords and/or content",
+                        BAD_REQUEST);
+            case METHOD_NOT_ALLOWED:
+                throw new FireBallException("The request used a method other than GET or POST",
+                        METHOD_NOT_ALLOWED);
+            case INTERNAL_SERVER_ERROR:
+                throw new FireBallException("The database is not available at the time of the request",
+                        INTERNAL_SERVER_ERROR);
+            case SERVICE_UNAVAILABLE:
+                throw new FireBallException("The server is currently unable to handle the request due " +
+                        "to a temporary overloading or maintenance of the server, " +
+                        "which will likely be alleviated after some delay",
+                        SERVICE_UNAVAILABLE);
             default:
                 return Collections.emptyList();
         }
@@ -101,7 +110,7 @@ public class FireballServiceImpl implements FireballService {
         JSONObject json = (JSONObject) parser.parse(response);
         int count = Integer.valueOf(json.get("count").toString());
 
-        if (Constants.THRESHOLD_CAPACITY > count)
+        if (THRESHOLD_CAPACITY > count)
             return Collections.emptyList();
 
         JSONArray array = new JSONArray();
@@ -115,15 +124,19 @@ public class FireballServiceImpl implements FireballService {
         Fireball fireball;
         for (int i = 0; i < count; i++) {
             JSONArray jsonArray = (JSONArray) ((JSONArray) array.get(0)).get(i);
-            //todo: instead of 1,2,3,4 these must also be constants/enums
-            if (Util.isNull(jsonArray.get(2), jsonArray.get(3), jsonArray.get(4), jsonArray.get(5), jsonArray.get(6)))
+            if (Util.isNull(jsonArray.get(TOTAL_IMPACTED_ENERGY.getValue()),
+                    jsonArray.get(LATITUDE.getValue()),
+                    jsonArray.get(LATITUDE_DIRECTION.getValue()),
+                    jsonArray.get(LONGITUDE.getValue()),
+                    jsonArray.get(LONGITUDE_DIRECTION.getValue())))
                 continue;
             fireball = new Fireball();
-            fireball.setTotalImpactEnergy(Double.parseDouble(jsonArray.get(2).toString()));
-            fireball.setLatitude(Double.parseDouble(jsonArray.get(3).toString()));
-            fireball.setLatDir(jsonArray.get(4).toString());
-            fireball.setLongitude(Double.parseDouble(jsonArray.get(5).toString()));
-            fireball.setLongDir(jsonArray.get(6).toString());
+            fireball.setTotalImpactEnergy(Double.parseDouble(
+                    jsonArray.get(TOTAL_IMPACTED_ENERGY.getValue()).toString()));
+            fireball.setLatitude(Double.parseDouble(jsonArray.get(LATITUDE.getValue()).toString()));
+            fireball.setLatDir(jsonArray.get(LATITUDE_DIRECTION.getValue()).toString());
+            fireball.setLongitude(Double.parseDouble(jsonArray.get(LONGITUDE.getValue()).toString()));
+            fireball.setLongDir(jsonArray.get(LONGITUDE_DIRECTION.getValue()).toString());
             fireballs.add(fireball);
         }
         return fireballs;

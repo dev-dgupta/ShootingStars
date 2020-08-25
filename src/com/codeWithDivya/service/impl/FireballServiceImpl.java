@@ -2,6 +2,7 @@ package com.codeWithDivya.service.impl;
 
 import com.codeWithDivya.dao.Fireball;
 import com.codeWithDivya.dao.Location;
+import com.codeWithDivya.exceptions.FireBallException;
 import com.codeWithDivya.service.FireballService;
 
 import java.net.URI;
@@ -24,7 +25,7 @@ import org.json.simple.parser.ParseException;
 public class FireballServiceImpl implements FireballService {
 
     @Override
-    public String getBrightestShootingStar(List<Location> locationInputs, String minDate) {
+    public String getBrightestShootingStar(List<Location> locationInputs, String minDate) throws FireBallException {
 
         List<Fireball> fireballDataPoints = getDataFromAPICall(minDate);
 

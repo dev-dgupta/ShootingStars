@@ -1,6 +1,7 @@
 package com.codeWithDivya;
 
 import com.codeWithDivya.dao.Location;
+import com.codeWithDivya.exceptions.FireBallException;
 import com.codeWithDivya.service.impl.FireballServiceImpl;
 import com.codeWithDivya.utils.Constants;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, FireBallException {
         //only user inputs taken
         Location boston = new Location("Boston", 42.354558, 71.054254, "N", "W");
         Location ncr = new Location("NCR", 28.574389, 77.312638, "N", "E");

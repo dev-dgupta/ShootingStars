@@ -7,13 +7,14 @@ public class FireBallException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
-    private final int errorCode;
+    private String errorCode="Unknown_Exception";
 
-    public FireBallException(int errorCode) {
+    public FireBallException(String message,String errorCode) {
+        super(message);
         this.errorCode = errorCode;
     }
 
-    public int getErrorCode() {
+    public String getErrorCode() {
         return errorCode;
     }
 }

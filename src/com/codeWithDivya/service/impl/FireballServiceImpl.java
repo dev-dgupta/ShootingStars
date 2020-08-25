@@ -66,7 +66,7 @@ public class FireballServiceImpl implements FireballService {
 //
 //    }
 
-    private List<Fireball> getDataFromAPICall(String minDate) {
+    private List<Fireball> getDataFromAPICall(String minDate)throws FireBallException {
         try {
             StringBuilder url = new StringBuilder(Constants.API_URL.concat("?date-min=").concat(minDate).concat("&req-loc=true"));
             var request = HttpRequest.newBuilder()
@@ -80,17 +80,17 @@ public class FireballServiceImpl implements FireballService {
         }
     }
 
-    private List<Fireball> handleResponse(HttpResponse response) throws Exception {
+    private List<Fireball> handleResponse(HttpResponse response) throws FireBallException, ParseException {
         int code = response.statusCode();
 
         // todo: handle these exceptions accordingly
         switch (code) {
             case 200:
                 return handleBody(String.valueOf(response.body()));
-            case 400:
-            case 405:
-            case 500:
-            case 503:
+            case 400:throw new FireBallException("Bad Request","400");
+            case 405:throw new FireBallException("Method Not Allowed","405");
+            case 500:throw new FireBallException("Internal Server Error server error","500");
+            case 503:throw new FireBallException("Service Unavailable","503");
             default:
                 return Collections.emptyList();
         }

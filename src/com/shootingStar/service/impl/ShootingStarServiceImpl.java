@@ -1,9 +1,11 @@
-package com.codeWithDivya.service.impl;
+package com.shootingStar.service.impl;
 
-import com.codeWithDivya.dao.Fireball;
-import com.codeWithDivya.dao.Location;
-import com.codeWithDivya.exceptions.FireBallException;
-import com.codeWithDivya.service.FireballService;
+import com.shootingStar.dao.Fireball;
+import com.shootingStar.dao.Location;
+
+import com.shootingStar.enums.HttpErrorCodes;
+import com.shootingStar.exceptions.FireBallException;
+import com.shootingStar.service.FireballService;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -13,15 +15,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.codeWithDivya.utils.Util;
+import com.shootingStar.utils.Messages;
+import com.shootingStar.utils.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import static com.codeWithDivya.utils.Constants.*;
-import static com.codeWithDivya.utils.Constants.Fields.*;
-import static com.codeWithDivya.utils.Constants.ErrorCodes.*;
+import static com.shootingStar.utils.Constants.*;
+import static com.shootingStar.enums.ApiResponseFields.*;
+import static com.shootingStar.enums.HttpErrorCodes.*;
 
 public class FireballServiceImpl implements FireballService {
 
@@ -32,15 +35,16 @@ public class FireballServiceImpl implements FireballService {
         List<Fireball> fireballDataPoints = getDataFromAPICall(minDate);
 
         if (fireballDataPoints.isEmpty()) {
-            return "Sufficient Data Points are not available. Please check in some time!!";
+            return Messages.API_NO_DATA;
         }
-
-        return "Brightest Star among Delphix Locations is " +
-                getBrightestStarLoc(locationInputs, fireballDataPoints);
+        List<Object> getBrightestStar= getBrightestStarDetails(locationInputs, fireballDataPoints);
+        return Messages.BRIGHTEST_LOCATION + getBrightestStar.get(0)
+                +Messages.BRIGHTEST_STAR_ENERGY+ getBrightestStar.get(1);
     }
 
-    private String getBrightestStarLoc(List<Location> locationInputs, List<Fireball> fireballDataPoints) {
+    private List<Object> getBrightestStarDetails(List<Location> locationInputs, List<Fireball> fireballDataPoints) {
         double maxBrightness = Integer.MIN_VALUE;
+        List<Object> getBrightestStar =new ArrayList<>();
         String brightestStar = "";
         double latMin, latMax, longMin, longMax;
         for (Location locationInput : locationInputs) {
@@ -61,7 +65,9 @@ public class FireballServiceImpl implements FireballService {
                 }
             }
         }
-        return brightestStar;
+        getBrightestStar.add(brightestStar);
+        getBrightestStar.add(maxBrightness);
+        return getBrightestStar;
     }
 
     private List<Fireball> getDataFromAPICall(String minDate) throws FireBallException {
@@ -81,25 +87,19 @@ public class FireballServiceImpl implements FireballService {
     }
 
     private List<Fireball> handleResponse(HttpResponse response) throws FireBallException, ParseException {
-        ErrorCodes codes = valueOf(response.statusCode());
+        HttpErrorCodes codes = valueOf(response.statusCode());
 
         switch (codes) {
             case OK:
                 return handleBody(String.valueOf(response.body()));
             case BAD_REQUEST:
-                throw new FireBallException("The request contained invalid keywords and/or content",
-                        BAD_REQUEST);
+                throw new FireBallException(Messages.BAD_REQUEST, BAD_REQUEST);
             case METHOD_NOT_ALLOWED:
-                throw new FireBallException("The request used a method other than GET or POST",
-                        METHOD_NOT_ALLOWED);
+                throw new FireBallException(Messages.METHOD_NOT_ALLOWED, METHOD_NOT_ALLOWED);
             case INTERNAL_SERVER_ERROR:
-                throw new FireBallException("The database is not available at the time of the request",
-                        INTERNAL_SERVER_ERROR);
+                throw new FireBallException(Messages.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR);
             case SERVICE_UNAVAILABLE:
-                throw new FireBallException("The server is currently unable to handle the request due " +
-                        "to a temporary overloading or maintenance of the server, " +
-                        "which will likely be alleviated after some delay",
-                        SERVICE_UNAVAILABLE);
+                throw new FireBallException(Messages.SERVICE_UNAVAILABLE, SERVICE_UNAVAILABLE);
             default:
                 return Collections.emptyList();
         }

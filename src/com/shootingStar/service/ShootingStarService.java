@@ -1,7 +1,7 @@
-package com.codeWithDivya.service;
+package com.shootingStar.service;
 
-import com.codeWithDivya.dao.Location;
-import com.codeWithDivya.exceptions.FireBallException;
+import com.shootingStar.dao.Location;
+import com.shootingStar.exceptions.FireBallException;
 
 import java.util.List;
 

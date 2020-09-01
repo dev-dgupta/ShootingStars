@@ -1,5 +1,8 @@
-package com.codeWithDivya.utils;
+package com.shootingStar.utils;
 
+/**
+ * utilities required for various conditions
+ */
 public class Util {
 
     public static boolean isInclusive(double x, double min, double max) {

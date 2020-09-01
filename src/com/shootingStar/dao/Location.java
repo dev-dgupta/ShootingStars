@@ -1,12 +1,14 @@
-package com.codeWithDivya.dao;
+package com.shootingStar.dao;
 import java.util.Objects;
 
+/**
+ * To store every location data
+ */
 public class Location {
 
     private String name;
     private double latitude;
     private double longitude;
-    //todo: must be enum
     private String latDirection;
     private String longDirection;
 

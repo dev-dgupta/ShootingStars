@@ -2,13 +2,13 @@ package com.shootingStar.exceptions;
 
 import com.shootingStar.enums.HttpErrorCodes;
 
-public class FireBallException extends Exception {
+public class ShootingStarException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
     private HttpErrorCodes errorCode;
 
-    public FireBallException(String message, HttpErrorCodes errorCode) {
+    public ShootingStarException(String message, HttpErrorCodes errorCode) {
         super(message);
         this.errorCode = errorCode;
     }

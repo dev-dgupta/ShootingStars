@@ -1,8 +1,5 @@
-package com.shootingStar.utils;
+package com.codeWithDivya.utils;
 
-/**
- * The messages used in various outputs and error description
- */
 public class Messages {
 
     public static final String INSUFFICIENT_DATA = "Insufficient Data provided";

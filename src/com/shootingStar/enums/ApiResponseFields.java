@@ -1,11 +1,6 @@
 package com.shootingStar.enums;
 
-/**
- * Used to specify data fields coming from FireBall Api
- *
- * @com.shootingStar.enums
- */
-public enum ApiResponseFields {
+public enum Fields {
 
         DATE(0),
         ENERGY(1),
@@ -20,11 +15,11 @@ public enum ApiResponseFields {
         private int value;
 
         // enum constructor - cannot be public or protected
-        private ApiResponseFields(int value) {
-                this.value = value;
+        private Fields(int value) {
+            this.value = value;
         }
 
         public int getValue() {
-                return value;
+            return value;
         }
 }

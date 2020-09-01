@@ -1,11 +1,8 @@
-package com.shootingStar.dao;
+package com.codeWithDivya.dao;
 
 import java.util.Date;
 import java.util.Objects;
 
-/**
- * To store every FireBall API data
- */
 public class Fireball {
 
     //date/time of peak brightness (GMT)
